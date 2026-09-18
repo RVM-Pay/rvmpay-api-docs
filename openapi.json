@@ -1,0 +1,3837 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Sports Backend API",
+    "version": "v1",
+    "description": "A scalable, multi-sport backend API.",
+    "contact": {
+      "name": "API Support"
+    },
+    "license": {
+      "name": "ISC"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://dev-api.rvmpay.com/api/v1",
+      "description": "Development Server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter your JWT token"
+      }
+    },
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Success"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true
+          },
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "example": "Bad request"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "example": 1
+          },
+          "limit": {
+            "type": "integer",
+            "example": 20
+          },
+          "total": {
+            "type": "integer",
+            "example": 100
+          },
+          "totalPages": {
+            "type": "integer",
+            "example": 5
+          },
+          "hasNext": {
+            "type": "boolean",
+            "example": true
+          },
+          "hasPrev": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "Season": {
+        "type": "object",
+        "properties": {
+          "sid": {
+            "type": "string",
+            "example": "2024"
+          },
+          "name": {
+            "type": "string",
+            "example": "2024"
+          },
+          "competitionsUrl": {
+            "type": "string",
+            "example": "seasons/2024/competitions"
+          },
+          "lastSyncedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Competition": {
+        "type": "object",
+        "properties": {
+          "cid": {
+            "type": "integer",
+            "example": 129438
+          },
+          "title": {
+            "type": "string",
+            "example": "ICC Champions Trophy"
+          },
+          "abbr": {
+            "type": "string",
+            "example": "ICC Champions 2025"
+          },
+          "category": {
+            "type": "string",
+            "example": "international"
+          },
+          "status": {
+            "type": "string",
+            "example": "result"
+          },
+          "gameFormat": {
+            "type": "string",
+            "example": "odi"
+          },
+          "season": {
+            "type": "string",
+            "example": "2025"
+          },
+          "dateStart": {
+            "type": "string",
+            "format": "date"
+          },
+          "dateEnd": {
+            "type": "string",
+            "format": "date"
+          },
+          "country": {
+            "type": "string",
+            "example": "int"
+          },
+          "totalMatches": {
+            "type": "integer",
+            "example": 15
+          },
+          "totalRounds": {
+            "type": "integer",
+            "example": 2
+          },
+          "totalTeams": {
+            "type": "integer",
+            "example": 8
+          },
+          "lastSyncedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Match": {
+        "type": "object",
+        "properties": {
+          "mid": {
+            "type": "integer",
+            "example": 48234
+          },
+          "cid": {
+            "type": "integer",
+            "example": 129438
+          },
+          "status": {
+            "type": "string",
+            "example": "result"
+          },
+          "title": {
+            "type": "string",
+            "example": "India vs Australia"
+          },
+          "subtitle": {
+            "type": "string",
+            "example": "Final"
+          },
+          "gameFormat": {
+            "type": "string",
+            "example": "odi"
+          },
+          "matchData": {
+            "type": "object"
+          },
+          "lastSyncedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Team": {
+        "type": "object",
+        "properties": {
+          "tid": {
+            "type": "integer",
+            "example": 1234
+          },
+          "cid": {
+            "type": "integer",
+            "example": 129438
+          },
+          "title": {
+            "type": "string",
+            "example": "India"
+          },
+          "abbr": {
+            "type": "string",
+            "example": "IND"
+          },
+          "country": {
+            "type": "string",
+            "example": "in"
+          },
+          "logoUrl": {
+            "type": "string"
+          },
+          "thumbUrl": {
+            "type": "string"
+          },
+          "teamType": {
+            "type": "string",
+            "example": "national"
+          },
+          "teamData": {
+            "type": "object"
+          },
+          "lastSyncedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Player": {
+        "type": "object",
+        "properties": {
+          "pid": {
+            "type": "integer",
+            "example": 12345
+          },
+          "title": {
+            "type": "string",
+            "example": "Virat Kohli"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "Virat"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Kohli"
+          },
+          "shortName": {
+            "type": "string",
+            "example": "V Kohli"
+          },
+          "country": {
+            "type": "string",
+            "example": "in"
+          },
+          "gender": {
+            "type": "string",
+            "example": "male"
+          },
+          "playingRole": {
+            "type": "string",
+            "example": "batsman"
+          },
+          "playerData": {
+            "type": "object"
+          },
+          "lastSyncedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MatchDetail": {
+        "type": "object",
+        "properties": {
+          "mid": {
+            "type": "integer",
+            "example": 48234
+          },
+          "resource": {
+            "type": "string",
+            "example": "scorecard",
+            "enum": [
+              "info",
+              "live",
+              "scorecard",
+              "squad",
+              "playing11",
+              "commentary",
+              "statistics",
+              "wagon-wheel",
+              "fantasy-points",
+              "fantasy-squad"
+            ]
+          },
+          "data": {
+            "type": "object"
+          },
+          "lastSyncedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RawResourceData": {
+        "type": "object",
+        "properties": {
+          "cid": {
+            "type": "integer",
+            "example": 129438
+          },
+          "data": {
+            "type": "object"
+          },
+          "lastSyncedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FlagSummary": {
+        "type": "object",
+        "properties": {
+          "flag": {
+            "type": "string",
+            "example": "IND"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://cdn.example.com/flags/IND.png"
+          }
+        }
+      },
+      "FlagDetail": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "65f1c2e4b8a1c2d3e4f5a6b7"
+          },
+          "flagImage": {
+            "type": "string",
+            "description": "Public S3 URL resolved from the stored image key.",
+            "example": "https://bucket.s3.amazonaws.com/flags/IND-1710000000000.png"
+          },
+          "team": {
+            "type": "string",
+            "example": "India"
+          },
+          "teamCode": {
+            "type": "string",
+            "example": "IND"
+          },
+          "teamType": {
+            "type": "string",
+            "enum": ["domestic", "international"],
+            "example": "international"
+          },
+          "colorCode": {
+            "type": "string",
+            "nullable": true,
+            "example": "#0033A0"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive"],
+            "example": "active"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Jersey": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "65f1c2e4b8a1c2d3e4f5a6b7"
+          },
+          "playerName": {
+            "type": "string",
+            "example": "Virat Kohli"
+          },
+          "pid": {
+            "type": "integer",
+            "example": 119,
+            "description": "EntitySport player id (matches Player.pid)."
+          },
+          "playerId": {
+            "type": "string",
+            "example": "65f1c2e4b8a1c2d3e4f5a6b8",
+            "description": "Mongo ObjectId reference to the player's document, resolved server-side from pid."
+          },
+          "team": {
+            "type": "string",
+            "example": "India"
+          },
+          "jerseyImage": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Keyed by format (e.g. \"T20\", \"IPL\"); each value is a public S3 URL resolved from the stored image key.",
+            "example": {
+              "T20": "https://bucket.s3.amazonaws.com/jerseys/T20-1710000000000.png"
+            }
+          },
+          "isActive": {
+            "type": "boolean",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "HealthData": {
+        "type": "object",
+        "properties": {
+          "service": {
+            "type": "string",
+            "example": "sports-backend"
+          },
+          "version": {
+            "type": "string",
+            "example": "1.0.0"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["ok", "degraded"],
+            "example": "ok"
+          },
+          "uptime": {
+            "type": "number",
+            "example": 123.456,
+            "description": "Process uptime in seconds"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "database": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "example": "connected",
+                "description": "One of 'disconnected' | 'connected' | 'connecting' | 'disconnecting' | 'error' | 'unknown'"
+              },
+              "latencyMs": {
+                "type": "number",
+                "nullable": true,
+                "example": 5
+              }
+            }
+          },
+          "cache": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "example": "connected"
+              },
+              "latencyMs": {
+                "type": "number",
+                "nullable": true,
+                "example": 2
+              }
+            }
+          },
+          "environment": {
+            "type": "string",
+            "example": "development"
+          }
+        }
+      },
+      "AuthUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "6512f1b2c3d4e5f6a7b8c9d0"
+          },
+          "name": {
+            "type": "string",
+            "example": "Jane Doe"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true,
+            "example": "jane.doe@example.com"
+          },
+          "countryCode": {
+            "type": "string",
+            "example": "+91"
+          },
+          "contactNo": {
+            "type": "string",
+            "example": "9876543210"
+          },
+          "profilePic": {
+            "type": "string",
+            "nullable": true,
+            "example": ""
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Admin", "User"],
+            "example": "User"
+          }
+        }
+      },
+      "SignupBody": {
+        "type": "object",
+        "required": ["name", "email", "password", "contactNo"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "example": "Jane Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "jane.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "example": "secret123"
+          },
+          "countryCode": {
+            "type": "string",
+            "example": "+91",
+            "description": "Optional, e.g. '+91'"
+          },
+          "contactNo": {
+            "type": "string",
+            "example": "9876543210",
+            "description": "10 digits"
+          }
+        }
+      },
+      "LoginBody": {
+        "type": "object",
+        "required": ["email", "password", "type"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "admin@example.com"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "example": "secret123"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Admin", "User"],
+            "example": "Admin"
+          }
+        }
+      },
+      "SendOtpBody": {
+        "type": "object",
+        "required": ["countryCode", "contactNo"],
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "example": "+91"
+          },
+          "contactNo": {
+            "type": "string",
+            "example": "9876543210",
+            "description": "Up to 10 digits"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "example": "Jane Doe",
+            "description": "Required only when registering a new user (no existing account for the number)"
+          }
+        }
+      },
+      "VerifyOtpBody": {
+        "type": "object",
+        "required": ["countryCode", "contactNo", "otp"],
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "example": "+91"
+          },
+          "contactNo": {
+            "type": "string",
+            "example": "9876543210"
+          },
+          "otp": {
+            "type": "string",
+            "example": "0000",
+            "description": "4 digits"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "PageParam": {
+        "in": "query",
+        "name": "page",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "description": "Page number"
+      },
+      "LimitParam": {
+        "in": "query",
+        "name": "limit",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "description": "Items per page"
+      },
+      "SortByParam": {
+        "in": "query",
+        "name": "sortBy",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Field to sort by"
+      },
+      "SortOrderParam": {
+        "in": "query",
+        "name": "sortOrder",
+        "schema": {
+          "type": "string",
+          "enum": ["asc", "desc"],
+          "default": "desc"
+        },
+        "description": "Sort order"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Health",
+      "description": "Service health check"
+    },
+    {
+      "name": "Auth",
+      "description": "User OTP auth and admin email/password auth"
+    },
+    {
+      "name": "Cricket - Seasons",
+      "description": "Cricket season operations"
+    },
+    {
+      "name": "Cricket - Competitions",
+      "description": "Cricket competition operations"
+    },
+    {
+      "name": "Cricket - Matches",
+      "description": "Cricket match operations"
+    },
+    {
+      "name": "Cricket - Teams",
+      "description": "Cricket team operations"
+    },
+    {
+      "name": "Cricket - Players",
+      "description": "Cricket player operations"
+    },
+    {
+      "name": "Cricket - Flags",
+      "description": "Cricket team/country flag lookup"
+    },
+    {
+      "name": "Cricket - Team Flags",
+      "description": "Admin-only cricket team flag CRUD (image upload)"
+    },
+    {
+      "name": "Cricket - Jersey",
+      "description": "Admin-only cricket player jersey CRUD (image upload)"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Service health check",
+        "description": "Reports application, MongoDB, and Redis status. Returns HTTP 200 when both the database and cache are reachable, otherwise HTTP 503 with status \"degraded\". The response envelope's data payload is populated in both cases.\n",
+        "responses": {
+          "200": {
+            "description": "Service is healthy.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/HealthData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service is degraded (database and/or cache unreachable).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/HealthData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/teams": {
+      "get": {
+        "tags": ["Cricket - Teams"],
+        "summary": "List cricket teams",
+        "description": "Returns a paginated list of global teams (cid=0 team records only). The `cid` field is always omitted from each returned team object. The `teamData` field is included in each returned object only when the `teamData` query parameter is true; otherwise it is omitted.\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitParam"
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "default": "title"
+            },
+            "description": "Field to sort by."
+          },
+          {
+            "$ref": "#/components/parameters/SortOrderParam"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "description": "Free-form exact-match filter, e.g. filter[abbr]=IND. Keys are dynamic (any Team field except _id, __v, createdAt, updatedAt, teamData); no fixed set of filter fields exists.\n"
+          },
+          {
+            "in": "query",
+            "name": "teamData",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "When true, includes each team's teamData field in the response (omitted by default)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of teams.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/Team"
+                              }
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/teams/{tid}": {
+      "get": {
+        "tags": ["Cricket - Teams"],
+        "summary": "Get a team by tid",
+        "description": "The `cid` field is always omitted from the returned team object.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Team ID (EntitySport tid)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The team.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Team"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/teams/{tid}/matches": {
+      "get": {
+        "tags": ["Cricket - Teams"],
+        "summary": "List matches for a team",
+        "description": "Returns matches where the team is teamA or teamB. No existence check is performed on tid — an unknown tid returns an empty paginated list rather than a 404.\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Team ID (EntitySport tid)"
+          },
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortByParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortOrderParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of matches for the team.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/Match"
+                              }
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/seasons": {
+      "get": {
+        "tags": ["Cricket - Seasons"],
+        "summary": "List all cricket seasons",
+        "description": "Returns all synced seasons. Not paginated.",
+        "responses": {
+          "200": {
+            "description": "List of seasons.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Season"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/seasons/{sid}": {
+      "get": {
+        "tags": ["Cricket - Seasons"],
+        "summary": "Get a season by sid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Season ID (EntitySport sid, e.g. \"2024\")"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The season.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Season"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Season not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/seasons/{sid}/competitions": {
+      "get": {
+        "tags": ["Cricket - Seasons"],
+        "summary": "List competitions in a season",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Season ID (EntitySport sid, e.g. \"2024\")"
+          },
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortByParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortOrderParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of competitions in the season.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/Competition"
+                              }
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Season not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/players": {
+      "get": {
+        "tags": ["Cricket - Players"],
+        "summary": "List cricket players",
+        "description": "Returns a paginated list of all players.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitParam"
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "default": "title"
+            },
+            "description": "Field to sort by."
+          },
+          {
+            "$ref": "#/components/parameters/SortOrderParam"
+          },
+          {
+            "in": "query",
+            "name": "playerData",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "When true, includes each player's playerData field in the response (omitted by default)."
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Case-insensitive partial match against the player's title field."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of players.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/Player"
+                              }
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/players/{pid}": {
+      "get": {
+        "tags": ["Cricket - Players"],
+        "summary": "Get a player by pid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Player ID (EntitySport pid)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The player.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Player"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Player not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/matches": {
+      "get": {
+        "tags": ["Cricket - Matches"],
+        "summary": "List cricket matches",
+        "description": "Returns a paginated list of matches. No authentication is required on this endpoint.\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitParam"
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sort field. Only \"matchData.date_start\" is honored server-side; any other value silently falls back to that default.\n"
+          },
+          {
+            "$ref": "#/components/parameters/SortOrderParam"
+          },
+          {
+            "in": "query",
+            "name": "cid",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by competition ID."
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$"
+            },
+            "description": "Filter by start date, matched as a prefix against matchData.date_start. Accepts YYYY, YYYY-MM, or YYYY-MM-DD.\n"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by match status (exact match)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of matches.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/Match"
+                              }
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/matches/{mid}": {
+      "get": {
+        "tags": ["Cricket - Matches"],
+        "summary": "Get a match by mid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "mid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Match ID (EntitySport mid)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The match.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Match"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Match not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/matches/{mid}/{resource}": {
+      "get": {
+        "tags": ["Cricket - Matches"],
+        "summary": "Get a specific detail resource for a match",
+        "description": "Returns the raw resource-specific payload for a match (e.g. scorecard, squad, commentary). Note: the response data is the resource's own payload as sourced from EntitySport / stored sync data, not the internal MatchDetail document wrapper (no mid/resource/lastSyncedAt fields are included).\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "mid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Match ID (EntitySport mid)"
+          },
+          {
+            "in": "path",
+            "name": "resource",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "info",
+                "live",
+                "scorecard",
+                "squad",
+                "playing11",
+                "commentary",
+                "statistics",
+                "wagon-wheel",
+                "fantasy-points",
+                "fantasy-squad"
+              ]
+            },
+            "description": "Match detail resource type."
+          },
+          {
+            "in": "query",
+            "name": "innings",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Innings number. Only applied when resource is \"commentary\"; ignored for all other resources."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The resource payload for the match.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "description": "Resource-dependent payload shape (EntitySport response for the requested resource)."
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid match resource. Present in the implementation, but in practice unreachable via this route since the path parameter is already restricted to the enum above before the handler runs.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Match not found, or resource data not available for this match.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/jersey": {
+      "get": {
+        "tags": ["Cricket - Jersey"],
+        "summary": "List jerseys (admin)",
+        "description": "Admin-only. Returns a paginated list of jersey records. Requires a valid admin bearer token that matches the single active token stored for that user.\n",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitParam"
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "default": "createdAt"
+            },
+            "description": "Field to sort by."
+          },
+          {
+            "$ref": "#/components/parameters/SortOrderParam"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "description": "Free-form filter, e.g. filter[team]=India. Keys are dynamic (any Jersey field except _id, __v, createdAt, updatedAt, jerseyImage); no fixed set of filter fields exists.\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of jerseys.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/Jersey"
+                              }
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, or stale bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated user is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Cricket - Jersey"],
+        "summary": "Create a jersey (admin)",
+        "description": "Admin-only. Resolves `pid` to an existing Player document, uploads the jersey image to S3, then creates the jersey record with jerseyImage keyed by `format` (e.g. `{ \"T20\": \"\u003Cs3-key\u003E\" }`). On upload or creation failure after a successful S3 upload, the uploaded object is cleaned up.\nKnown implementation quirk: when the `image` file part is missing, the handler throws an `ApiResponse` instance instead of an `ApiError`/`HttpException`. The global exception filter does not recognize this as a typed error, so it falls through to the generic 500 Internal Server Error branch instead of returning a 400. Documented here as-is, matching the actual current behavior.\n",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["playerName", "pid", "team", "format", "image"],
+                "properties": {
+                  "playerName": {
+                    "type": "string",
+                    "example": "Virat Kohli"
+                  },
+                  "pid": {
+                    "type": "integer",
+                    "description": "EntitySport player id; must match an existing Player document.",
+                    "example": 119
+                  },
+                  "team": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "format": {
+                    "type": "string",
+                    "description": "Stored uppercased; used as the key under jerseyImage.",
+                    "example": "T20"
+                  },
+                  "isActive": {
+                    "type": "boolean",
+                    "description": "Defaults to true when omitted (schema default)."
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Jersey image file. Intended to be required - see the \"Known implementation quirk\" note above for what actually happens when it is missing.\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created jersey.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Jersey"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error (request body failed Zod validation).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, or stale bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated user is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Player document found for the given pid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error. Also returned when the image file part is missing, due to the implementation quirk described above.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/jersey/{id}": {
+      "get": {
+        "tags": ["Cricket - Jersey"],
+        "summary": "Get a jersey by id (admin)",
+        "description": "Admin-only. Requires a valid admin bearer token.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{24}$"
+            },
+            "description": "MongoDB ObjectId of the jersey record."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The jersey.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Jersey"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, or stale bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated user is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Jersey not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Cricket - Jersey"],
+        "summary": "Update a jersey (admin)",
+        "description": "Admin-only. All body fields are optional - only provided fields are updated. If `pid` is provided, it is re-resolved to an existing Player document. When an `image` file part is included, `format` must also be provided in the same request (otherwise a 400 is returned) - the image is uploaded to S3, jerseyImage[format] is set to the new key, and the previous image at that format key (if any) is deleted from S3 afterward. Other formats already stored on the record are left untouched.\n",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{24}$"
+            },
+            "description": "MongoDB ObjectId of the jersey record."
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "playerName": {
+                    "type": "string",
+                    "example": "Virat Kohli"
+                  },
+                  "pid": {
+                    "type": "integer",
+                    "description": "EntitySport player id; must match an existing Player document.",
+                    "example": 119
+                  },
+                  "team": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "format": {
+                    "type": "string",
+                    "description": "Required when image is included; identifies which jerseyImage key to set.",
+                    "example": "T20"
+                  },
+                  "isActive": {
+                    "type": "boolean"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "New jersey image file for the given format. Optional - existing images are kept when omitted."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated jersey.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Jersey"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error, or image provided without format.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, or stale bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated user is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Jersey not found, or no Player document found for the given pid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Cricket - Jersey"],
+        "summary": "Delete a jersey (admin)",
+        "description": "Admin-only. Deletes the jersey record and best-effort deletes all of its stored images from S3 (an S3 deletion failure is logged but does not fail the request). Returns no body.\n",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{24}$"
+            },
+            "description": "MongoDB ObjectId of the jersey record."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Jersey deleted. No response body."
+          },
+          "401": {
+            "description": "Missing, invalid, or stale bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated user is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Jersey not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/flags": {
+      "get": {
+        "tags": ["Cricket - Flags"],
+        "summary": "List available team/country flags",
+        "description": "Returns a static, in-memory list of flag codes with their CDN image URLs. Not backed by the database or EntitySport sync - the list comes from a hardcoded FLAG_CODES constant, and each URL is built by appending the code to the configured CDN base URL. Not paginated.\n",
+        "responses": {
+          "200": {
+            "description": "List of flags.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/FlagSummary"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/team-flags": {
+      "get": {
+        "tags": ["Cricket - Team Flags"],
+        "summary": "List team flags (admin)",
+        "description": "Admin-only. Returns a paginated list of flag records stored in the database (distinct from the public, static /cricket/flags list). Requires a valid admin bearer token that matches the single active token stored for that user.\n",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitParam"
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "default": "createdAt"
+            },
+            "description": "Field to sort by."
+          },
+          {
+            "$ref": "#/components/parameters/SortOrderParam"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "description": "Free-form filter, e.g. filter[teamCode]=IND. Keys are dynamic (any Flag field except _id, __v, createdAt, updatedAt, flagImage); no fixed set of filter fields exists.\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of team flags.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/FlagDetail"
+                              }
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, or stale bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated user is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Cricket - Team Flags"],
+        "summary": "Create a team flag (admin)",
+        "description": "Admin-only. Uploads the flag image to S3, then creates the flag record. The image is required by the service layer (a 400 is thrown if the `image` file part is missing) even though it is not enforced by the request-body Zod schema itself, since the file is bound separately via a multipart FileInterceptor rather than the JSON body. `teamCode` is stored uppercased and must be unique. On upload or validation failure after a successful S3 upload, the uploaded object is cleaned up.\n",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["team", "teamCode", "teamType", "image"],
+                "properties": {
+                  "team": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "teamCode": {
+                    "type": "string",
+                    "description": "Stored uppercased; must be unique.",
+                    "example": "IND"
+                  },
+                  "teamType": {
+                    "type": "string",
+                    "enum": ["domestic", "international"],
+                    "example": "international"
+                  },
+                  "colorCode": {
+                    "type": "string",
+                    "example": "#0033A0"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["active", "inactive"],
+                    "description": "Defaults to active when omitted (schema default)."
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Flag image file. Required - a 400 is returned when missing."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created team flag.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/FlagDetail"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error, or the image file part is missing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, or stale bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated user is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A flag with this teamCode already exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/team-flags/{id}": {
+      "get": {
+        "tags": ["Cricket - Team Flags"],
+        "summary": "Get a team flag by id (admin)",
+        "description": "Admin-only. Requires a valid admin bearer token.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{24}$"
+            },
+            "description": "MongoDB ObjectId of the flag record."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The team flag.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/FlagDetail"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, or stale bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated user is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Flag not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Cricket - Team Flags"],
+        "summary": "Update a team flag (admin)",
+        "description": "Admin-only. All body fields are optional - only provided fields are updated. When an `image` file part is included, it is uploaded to S3, the record's flagImage is set to the new key, and the previous image is deleted from S3 afterward. `teamCode`, if provided, is stored uppercased and must remain unique.\n",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{24}$"
+            },
+            "description": "MongoDB ObjectId of the flag record."
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "team": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "teamCode": {
+                    "type": "string",
+                    "description": "Stored uppercased; must remain unique.",
+                    "example": "IND"
+                  },
+                  "teamType": {
+                    "type": "string",
+                    "enum": ["domestic", "international"]
+                  },
+                  "colorCode": {
+                    "type": "string",
+                    "example": "#0033A0"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["active", "inactive"]
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "New flag image file. Optional - existing image is kept when omitted."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated team flag.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/FlagDetail"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, or stale bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated user is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Flag not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A flag with this teamCode already exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Cricket - Team Flags"],
+        "summary": "Delete a team flag (admin)",
+        "description": "Admin-only. Deletes the flag record and best-effort deletes its image from S3 (an S3 deletion failure is logged but does not fail the request). Returns no body.\n",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{24}$"
+            },
+            "description": "MongoDB ObjectId of the flag record."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Flag deleted. No response body."
+          },
+          "401": {
+            "description": "Missing, invalid, or stale bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated user is not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Flag not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/competitions": {
+      "get": {
+        "tags": ["Cricket - Competitions"],
+        "summary": "List cricket competitions",
+        "description": "Returns a paginated, optionally filtered list of competitions.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortByParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortOrderParam"
+          },
+          {
+            "in": "query",
+            "name": "filter[category]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact-match filter on competition category (e.g. \"international\")"
+          },
+          {
+            "in": "query",
+            "name": "filter[status]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact-match filter on competition status (e.g. \"result\")"
+          },
+          {
+            "in": "query",
+            "name": "filter[gameFormat]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact-match filter on game format (e.g. \"odi\")"
+          },
+          {
+            "in": "query",
+            "name": "filter[country]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact-match filter on country code (e.g. \"int\")"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of competitions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/Competition"
+                              }
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/competitions/{cid}": {
+      "get": {
+        "tags": ["Cricket - Competitions"],
+        "summary": "Get a competition by cid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Competition ID (EntitySport cid)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The competition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Competition"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Competition not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/competitions/{cid}/matches": {
+      "get": {
+        "tags": ["Cricket - Matches"],
+        "summary": "List matches for a competition",
+        "description": "Returns a paginated list of matches belonging to the given competition. No existence check is performed on cid — an unknown cid returns an empty paginated list rather than a 404.\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Competition ID (EntitySport cid)"
+          },
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortByParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortOrderParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of matches for the competition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/Match"
+                              }
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/competitions/{cid}/matches/{mid}": {
+      "get": {
+        "tags": ["Cricket - Matches"],
+        "summary": "Get a single match within a competition",
+        "description": "Returns a match by mid. The match is looked up by mid only — the cid path segment is not used to scope or verify the lookup, so this behaves identically to GET /cricket/matches/{mid} regardless of the cid supplied.\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Competition ID (EntitySport cid)"
+          },
+          {
+            "in": "path",
+            "name": "mid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Match ID (EntitySport mid)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The match.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Match"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Match not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/competitions/{cid}/teams": {
+      "get": {
+        "tags": ["Cricket - Teams"],
+        "summary": "List teams participating in a competition",
+        "description": "Returns a paginated list of teams whose cid matches the given competition (unlike GET /cricket/teams, the cid field is NOT omitted from these team objects). No existence check is performed on cid — an unknown cid returns an empty paginated list rather than a 404.\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Competition ID (EntitySport cid)"
+          },
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitParam"
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "default": "title"
+            },
+            "description": "Field to sort by."
+          },
+          {
+            "$ref": "#/components/parameters/SortOrderParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of teams for the competition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/Team"
+                              }
+                            },
+                            "pagination": {
+                              "$ref": "#/components/schemas/Pagination"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/competitions/{cid}/teams/{tid}": {
+      "get": {
+        "tags": ["Cricket - Teams"],
+        "summary": "Get a single team within a competition",
+        "description": "Returns a team by tid, with the cid field omitted from the response. The team is looked up by tid only — the cid path segment is not used to scope or verify the lookup, so this behaves identically to GET /cricket/teams/{tid} regardless of the cid supplied.\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Competition ID (EntitySport cid)"
+          },
+          {
+            "in": "path",
+            "name": "tid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Team ID (EntitySport tid)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The team.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Team"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/competitions/{cid}/squads": {
+      "get": {
+        "tags": ["Cricket - Competitions"],
+        "summary": "Get squads for a competition",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Competition ID (EntitySport cid)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The squad data for the competition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "cid": {
+                              "type": "integer",
+                              "example": 129438
+                            },
+                            "squads": {
+                              "type": "object"
+                            },
+                            "lastSyncedAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Squad data not found for this competition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/competitions/{cid}/standings": {
+      "get": {
+        "tags": ["Cricket - Competitions"],
+        "summary": "Get standings for a competition",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Competition ID (EntitySport cid)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The standings data for the competition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "cid": {
+                              "type": "integer",
+                              "example": 129438
+                            },
+                            "standings": {
+                              "type": "object"
+                            },
+                            "lastSyncedAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Standings not found for this competition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/competitions/{cid}/statistic-types": {
+      "get": {
+        "tags": ["Cricket - Competitions"],
+        "summary": "Get available statistic types for a competition",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Competition ID (EntitySport cid)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The statistic-types data for the competition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "cid": {
+                              "type": "integer",
+                              "example": 129438
+                            },
+                            "types": {
+                              "type": "object"
+                            },
+                            "lastSyncedAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Statistic types not found for this competition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cricket/competitions/{cid}/statistics": {
+      "get": {
+        "tags": ["Cricket - Competitions"],
+        "summary": "Get statistics for a competition",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cid",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Competition ID (EntitySport cid)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The statistics data for the competition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "cid": {
+                              "type": "integer",
+                              "example": 129438
+                            },
+                            "statistics": {
+                              "type": "object"
+                            },
+                            "lastSyncedAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Statistics not found for this competition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/admin/signup": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Create an admin account",
+        "description": "Registers a new admin user (email/password). Fails if the email or contact number is already in use.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Admin account created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "message": {
+                              "type": "string",
+                              "example": "Admin account created successfully"
+                            },
+                            "user": {
+                              "$ref": "#/components/schemas/AuthUser"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email or mobile number already exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/admin/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Admin email/password login",
+        "description": "Authenticates an admin user and issues a JWT. Overwrites any previously issued token for that user.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "token": {
+                              "type": "string",
+                              "description": "JWT bearer token, valid for 1 day"
+                            },
+                            "user": {
+                              "$ref": "#/components/schemas/AuthUser"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials (unknown email, missing password, or incorrect password).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User exists but does not match the requested account type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/send-otp": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Send OTP to a mobile number",
+        "description": "Sends a static development OTP (real SMS delivery is not yet wired up) to the given number. If no user exists for the number, `name` is required to create one. If a user already exists and `name` is provided, the request fails with 409 (mobile number already registered).\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendOtpBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "message": {
+                              "type": "string",
+                              "example": "OTP sent to your registered mobile number. Please enter the OTP to continue."
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existing user for this number and no `name` was provided to create one.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Mobile number already registered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify-otp": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Verify OTP and log in",
+        "description": "Verifies the OTP for a mobile number and, if valid, issues a JWT. Overwrites any previously issued token for that user.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyOtpBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "message": {
+                              "type": "string",
+                              "example": "Login successful"
+                            },
+                            "token": {
+                              "type": "string",
+                              "description": "JWT bearer token, valid for 1 day"
+                            },
+                            "user": {
+                              "$ref": "#/components/schemas/AuthUser"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error, expired OTP, or incorrect OTP.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No user found for this mobile number.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
